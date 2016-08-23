@@ -2,10 +2,8 @@ package web;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,13 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import dominio.Buffet;
 import dominio.BuffetComponente;
 import dominio.Componente;
+import servico.BuffetComponenteServico;
+import servico.BuffetServico;
+import servico.ComponenteServico;
 
 @WebServlet("/Instanciacao")
 public class Instanciacao extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		//try{
 		Buffet b1 = new Buffet(null, "Casamento", new BigDecimal("10000.00"));
 		Buffet b2 = new Buffet(null, "Aniversário", new BigDecimal("4000.00"));
 		
@@ -35,30 +36,34 @@ public class Instanciacao extends HttpServlet {
 		BuffetComponente bc4 = new BuffetComponente(null, new BigDecimal("50.00"), b1, c3);
 		BuffetComponente bc5 = new BuffetComponente(null, new BigDecimal("0.00"), b2, c3);
 
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("meujpa");
+
+		BuffetServico bs = new BuffetServico();
+		ComponenteServico cs = new ComponenteServico();
+		BuffetComponenteServico bcs = new BuffetComponenteServico();
 		
-		EntityManager em = emf.createEntityManager();
+		bs.inserirAtualizar(b1);
+		bs.inserirAtualizar(b2);
+
+		cs.inserirAtualizar(c1);
 		
-		em.getTransaction().begin();
-		em.persist(b1);
-		em.persist(b2);
-		em.persist(c1);
-		em.persist(c2);
-		em.persist(c3);
-		em.persist(bc1);
-		em.persist(bc2);
-		em.persist(bc3);
-		em.persist(bc4);
-		em.persist(bc5);
-		
-		em.getTransaction().commit();
-		
-		em.close();
-		emf.close();
+		bcs.inserirAtualizar(bc1);
+		bcs.inserirAtualizar(bc2);
+
 		
 		response.getWriter().append("Fim da instanciação");
 
+	//}
+
+		//catch (ParseException e) {
+		//	System.out.println("Erro: " + e.getMessage());
+		//}
+
+	
+	
 	}
 }
+	
+	
+
 
 
